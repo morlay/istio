@@ -58,14 +58,17 @@ for file in "$@"; do
     cat <<EOF >> "${config}"
 target "$image-$variant" {
     context = "${out}/${file}"
+    
     dockerfile = "Dockerfile.$image"
-    tags = ["${HUB}/${image}:${tag}"]
+    tags = ["${HUB}/${image}:${tag}-${TARGET_ARCH}"]
     args = {
       BASE_VERSION = "${BASE_VERSION}"
       BASE_DISTRIBUTION = "${variant}"
       proxy_version = "istio-proxy:${PROXY_REPO_SHA}"
       istio_version = "${VERSION}"
+      ARCH = "${TARGET_ARCH}"
     }
+    platforms = ["linux/${TARGET_ARCH}"]
     ${output}
 }
 EOF
